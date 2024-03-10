@@ -1,0 +1,19 @@
+.loginBtn {
+    color: white !important;
+} 
+
+.loginBtn:hover {
+    color: black !important;
+}
+
+.modalBox .modal-content {
+    min-width: 300px !important;
+}
+
+.emailContainer, .passContainer {
+    padding: 0 50px;
+}
+
+.modalFooter {
+    padding-right: 50px;
+}
