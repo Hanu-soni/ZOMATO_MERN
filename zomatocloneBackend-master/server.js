@@ -2,7 +2,7 @@
 const bcrypt =require('bcrypt');
 const express=require('express');
 const uri = process.env.MONGODB_CONNECTION_URI;
-const xlsxFile =require('read-excel-file/node') ;
+//const xlsxFile =require('read-excel-file/node') ;
 const jwt=require('jsonwebtoken');
 const mongoose = require("mongoose");
 
@@ -12,12 +12,14 @@ const restaurentdata=require('./Data/restaurent');
 const saltRounds = 10;
 const dbCon=require('./Connection/dbcon')
 const POST=3000
+const dotenv=require('dotenv');
 // app.use(dbCon)
 
 
 
 //getting all the routes
 const userRoute=require('./routes/userRoute')
+const restaurantRoute=require('./routes/restaurentRoute');
 
 
 
@@ -86,10 +88,12 @@ const PORT =  process.env.PORT || 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+require('dotenv').config();
+
 //const db='foods';
 
 //Connection to mongodb
-const dbURL="mongodb+srv://Hanusoni133:1234@cluster0.3rrxgxk.mongodb.net/foods";
+const dbURL=process.env.DB_URL;
 const Database=mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB Atlas');
@@ -124,22 +128,8 @@ function getHeaderFromToken(token) {
 
 
 //Modal
-const restaurentSchema=mongoose.Schema(
-    {
-        
-            name: String,
-            code: String,
-            location_codes: Array,
-            timing_codes:{type:Array,},
-            cuisine:{type:Array,},
-            cost:Number,
-            overview:String,
-            images:{type:Array,},
-            address:String,
+const db1=require('./models/restaurentSchema')
 
-        
-    }
-)
 
 
 
@@ -216,130 +206,147 @@ app.get('/getLocations', async (req, res) => {
 });
 
 
-app.post('/addRestaurants', async (req, res) => {
-    let result = '';
-    result = await db.collection('restaurants').insertMany([...restuarants]);
-    res.send({
-        'status': 200,
-        'message': 'Food item addded successfully',
-        'resultWeGot': result
-    })
-});
 
-app.delete('/deleteAllRestaurants', async (req, res) => {
-    const result = await db.collection('restaurants').deleteMany({})
-    if (result.acknowledged) {
-        res.send({
-            'status': 200,
-            'message': 'All restaurants details deleted successfully',
-            'result': result
-        });
-    } else {
-        res.send({
-            'status': 500,
-            'message': 'MULTIPLE DELETE OPERATION FAILED',
-            'result': result
-        });
-    }
-});
 
-const db1=mongoose.model('resturant_details1',restaurentSchema);
+
+//require-now
+// app.post('/addRestaurants', async (req, res) => {
+//     let result = '';
+//     result = await db.collection('restaurants').insertMany([...restuarants]);
+//     res.send({
+//         'status': 200,
+//         'message': 'Food item addded successfully',
+//         'resultWeGot': result
+//     })
+// });
+
+
+
+//require-now
+// app.delete('/deleteAllRestaurants', async (req, res) => {
+//     const result = await db.collection('restaurants').deleteMany({})
+//     if (result.acknowledged) {
+//         res.send({
+//             'status': 200,
+//             'message': 'All restaurants details deleted successfully',
+//             'result': result
+//         });
+//     } else {
+//         res.send({
+//             'status': 500,
+//             'message': 'MULTIPLE DELETE OPERATION FAILED',
+//             'result': result
+//         });
+//     }
+// });
+
+//const db1=mongoose.model('resturant_details1',restaurentSchema);
 console.log(restaurentdata)
-db1.insertMany(restaurentdata).then(() => {
-    console.log('Demo data inserted successfully.');
-  })
-  .catch(error => {
-    console.error('Error inserting demo data:', error);
-  });
+
+
+//require-now
+// db1.insertMany(restaurentdata).then(() => {
+//     console.log('Demo data inserted successfully.');
+//   })
+//   .catch(error => {
+//     console.error('Error inserting demo data:', error);
+//   });
 
 let location_code=[],timing_code=[],selectedCuisine=[];
 
-app.get('/getRestaurants', async (req, res) => {
+
+
+
+
+
+
+//require-now
+// app.get('/getRestaurants', async (req, res) => {
      
    
-     location_code = [...location_code,req.query?.location_code];
-    const timing_code = req.query?.timing_codes;
-    const selectedCuisine = req.query?.selectedCuisine;
-    const sortBy = req.query?.sortBy;
-    const result = await db1.find();
-   // console.log(result)
-    //result=result.toArray();
-    //console.log(result);
+//      location_code = [...location_code,req.query?.location_code];
+//     const timing_code = req.query?.timing_codes;
+//     const selectedCuisine = req.query?.selectedCuisine;
+//     const sortBy = req.query?.sortBy;
+//     const result = await db1.find();
+//    // console.log(result)
+//     //result=result.toArray();
+//     //console.log(result);
 
-    const page = req.query?.page || 1;
-    const limit = req.query?.limit || 2;
+//     const page = req.query?.page || 1;
+//     const limit = req.query?.limit || 2;
 
-    let costFilter = req.query?.selectedCostRange;
+//     let costFilter = req.query?.selectedCostRange;
 
-    let filters = {};
-    if (location_code) {
-        filters['location_codes'] = location_code.join(',');
-    }
-    if (timing_code) {
-        filters['timing_codes'] = timing_code.join(',');
-    }
-    if (selectedCuisine) {
-        filters['cuisine'] = selectedCuisine.join(',');
-    }
-    // console.log(filters)
+//     let filters = {};
+//     if (location_code) {
+//         filters['location_codes'] = location_code.join(',');
+//     }
+//     if (timing_code) {
+//         filters['timing_codes'] = timing_code.join(',');
+//     }
+//     if (selectedCuisine) {
+//         filters['cuisine'] = selectedCuisine.join(',');
+//     }
+//     // console.log(filters)
 
     
 
-    let filtered_restuarants = [];
+//     let filtered_restuarants = [];
 
-    // These are filter applied
-    filtered_restuarants = result.filter(resturant => {
-        return Object.keys(filters).every(filter => {
-            //  return resturant[filter].includes(filters[filter])
-            return resturant[filter].some((item, index) => satisfyCallBack(item, index, filters[filter]))
-        });
-    });
+//     // These are filter applied
+//     filtered_restuarants = result.filter(resturant => {
+//         return Object.keys(filters).every(filter => {
+//             //  return resturant[filter].includes(filters[filter])
+//             return resturant[filter].some((item, index) => satisfyCallBack(item, index, filters[filter]))
+//         });
+//     });
 
-    //sorted Restaurants 
-    if(sortBy === 'lowtohigh'){
-        filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
-            return item.cost - nextItem.cost;
-        })
-    }else if(sortBy === 'hightolow'){
-        filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
-            return nextItem.cost - item.cost;
-        })
-    }
+//     //sorted Restaurants 
+//     if(sortBy === 'lowtohigh'){
+//         filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
+//             return item.cost - nextItem.cost;
+//         })
+//     }else if(sortBy === 'hightolow'){
+//         filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
+//             return nextItem.cost - item.cost;
+//         })
+//     }
 
-    // cost filters
-    if (costFilter) {
-        console.log(costFilter)
-        costFilter = JSON.parse(costFilter)
-        filtered_restuarants = filtered_restuarants.filter((item) => {
-            // console.log(costFilter.from)
-            return (item.cost >= costFilter.from && item.cost <= costFilter.to)
-        });
-    }
+//     // cost filters
+//     if (costFilter) {
+//         console.log(costFilter)
+//         costFilter = JSON.parse(costFilter)
+//         filtered_restuarants = filtered_restuarants.filter((item) => {
+//             // console.log(costFilter.from)
+//             return (item.cost >= costFilter.from && item.cost <= costFilter.to)
+//         });
+//     }
 
-    // const skip = (page-1)*limit;
-    // const tempFr = [...filtered_restuarants];
-    // tempFr.splice(0,skip);// To skip
-    // //give 0 - limit-1 items
-    // const limitAppliedItems = tempFr.slice(0,limit)
-    // const finalfilter=filtered_restuarants;
-    // on top of applying filters i also need specific page data
+//     // const skip = (page-1)*limit;
+//     // const tempFr = [...filtered_restuarants];
+//     // tempFr.splice(0,skip);// To skip
+//     // //give 0 - limit-1 items
+//     // const limitAppliedItems = tempFr.slice(0,limit)
+//     // const finalfilter=filtered_restuarants;
+//     // on top of applying filters i also need specific page data
 
-    try {
-        res.send({
-            'status': 200,
-            'data': {
-                'resturant':filtered_restuarants,
-                'total':filtered_restuarants.length
-            },
-        })
-    } catch (e) {
-        console.error(e)
-        res.send({
-            'status': 200,
-            'data': filtered_restuarants
-        })
-    }
-});
+//     try {
+//         res.send({
+//             'status': 200,
+//             'data': {
+//                 'resturant':filtered_restuarants,
+//                 'total':filtered_restuarants.length
+//             },
+//         })
+//     } catch (e) {
+//         console.error(e)
+//         res.send({
+//             'status': 200,
+//             'data': filtered_restuarants
+//         })
+//     }
+// });
 
 function satisfyCallBack(resturantItem, index, filterItem) {
     let flag = false;
@@ -350,6 +357,9 @@ function satisfyCallBack(resturantItem, index, filterItem) {
     return (flag);
 }
 
+
+
+//require-now
 app.get('/getRestaurantDetails', async (req, res) => {
     // const resturantCode = req.query.code;
 
@@ -458,6 +468,7 @@ app.post('/addFood', async (req, res) => {
 
 
 app.use(userRoute)
+app.use(restaurantRoute);
 
 // app.post('/signup', async (req, res) => {
 //     console.log(req.body);
