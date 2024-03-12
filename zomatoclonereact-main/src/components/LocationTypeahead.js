@@ -20,7 +20,7 @@ function LocationTypeahead(props) {
 
     useEffect(() =>{
         // console.log("I am SELECTED LOCATION");
-        // console.log(selectedLocation);
+         console.log(selectedLocation);
         
         if(selectedLocation.length >= 0){
             props.filterRestaurent(selectedLocation);

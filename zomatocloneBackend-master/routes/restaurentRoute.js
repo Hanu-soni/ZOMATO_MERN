@@ -7,6 +7,63 @@ console.log(restaurentdata)
 
 
 
+const timings = {
+    'BRF': 'BRF',
+    'LCH': 'LCH',
+    'DNR': 'DNR',
+    'NGT': 'NGT',
+    'SKS': 'SKS',
+    'DRK': 'DRK',
+};
+
+const locationCodes = {
+    'BLR': 'BLR',
+    'MUM': 'MUM',
+    'CHN': 'CHN',
+    'AP': 'AP'
+};
+
+const quickResturantFilters = [
+    {
+        'timing': 'Breakfast',
+        'code': timings.BRF,
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/1image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    },
+    {
+        'timing': 'Lunch',
+        'code': timings.LCH,
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/2image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    },
+    {
+        'timing': 'Dinner',
+        'code': timings.DNR,
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/3image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    },
+    {
+        'timing': 'Snacks',
+        'code': timings.SKS,
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/4image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    },
+    {
+        'timing': 'Drinks',
+        'code': timings.DRK,   
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/5image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    },
+    {
+        'timing': 'Night',
+        'code': timings.NGT,
+        'image': 'https://github.com/DivyashantKumar/assignment-first/blob/main/images/6image.png?raw=true',
+        'description': 'Start Your day with exclusive breakfast options'
+    }
+]
+
+
+
 
 Restaurent.insertMany(restaurentdata).then(() => {
     console.log('Demo data inserted successfully.');
@@ -14,6 +71,8 @@ Restaurent.insertMany(restaurentdata).then(() => {
   .catch(error => {
     console.error('Error inserting demo data:', error);
   });
+
+  let location_code=[],timing_code=[],selectedCuisine=[];
 
 router.get('/getRestaurants', async (req, res) => {
      
@@ -101,6 +160,17 @@ router.get('/getRestaurants', async (req, res) => {
        })
    }
 });
+
+
+
+function satisfyCallBack(resturantItem, index, filterItem) {
+    let flag = false;
+    const splitArray = filterItem.split(',');
+    splitArray.forEach(element => {
+        flag = flag || (element === resturantItem);
+    });
+    return (flag);
+}
 
 
 
