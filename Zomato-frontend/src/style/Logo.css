@@ -1,0 +1,40 @@
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.circle {
+    background-color: #fff;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle p {
+    padding-top: 15px;
+    color: rgb(235, 41, 41);
+    font: normal normal 600 70px/106px Poppins;
+}
+
+
+@media only screen and (max-width:500px) {
+    .logo {
+        margin-top: 45px;
+    }
+
+    .circle {
+        width: 90px;
+        height: 90px;
+    }
+
+    .circle p {
+        font: normal normal 600 42px/63px Poppins;
+    }
+}
