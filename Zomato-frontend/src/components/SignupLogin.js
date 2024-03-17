@@ -18,15 +18,36 @@ function SignupLogin() {
     function handleClose(loginOrSingup) {
         if (loginOrSingup === "login") {
             axiosInstanceWithoutToken.post(`${BaseUrl}/login`, param).then((res) => {
-                if(res.status === 200){
-                    const encodedToken = res.data.data.token;
-                    sessionStorage.setItem('token', encodedToken);
-                    const decoded = jwt_decode(res.data.data.token);
-                    setDecodedToken(decoded);
-                    // console.log(decoded.userDetails.userName);
-                    window.alert(`Welcome ${decoded.userDetails.userName}`)
-                }
-            })
+                console.log(res.status)
+            //     if(res.status === 200){
+            //         const encodedToken = res.token;
+            //         sessionStorage.setItem('token', encodedToken);
+            //         const decoded = jwt_decode(res.data.data.token);
+            //         setDecodedToken(decoded);
+            //          console.log(decoded.userDetails.userName);
+            //         window.alert(`Welcome ${decoded.userDetails.userName}`)
+
+            //     }
+            //     else{
+            //         window.alert('Invalid loginId or password')
+            //     }
+            // 
+            if (res.status === 200) {
+                const token = res.data.token;
+                sessionStorage.setItem('token', token);
+                const decoded = jwt_decode(token);
+                console.log(decoded.userDetails.username);
+                window.alert(`Welcome ${decoded.userDetails.username}`);
+                window.location.reload();
+            } else {
+                window.alert('Invalid login ID or password');
+            }
+        
+
+
+
+        }
+            )
             setShow(false);
         } 
         else if (loginOrSingup === "signup") {
@@ -68,6 +89,7 @@ function SignupLogin() {
                             {
                                 handleShow();
                                 handleModelTitle("login");
+                                console.log("executed line 71 ")
                             }
                         }> Login 
                 </Nav.Link> : 

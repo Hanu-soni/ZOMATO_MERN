@@ -81,9 +81,9 @@ function RestaurantListContainer() {
 
     useEffect(() => {
 
-        console.log("PAyloadchanges")
+       console.log("PAyloadchanges")
         restaurentFilter();
-    }, [payload, activePage, sortBy]);
+     },[payload]);
 
 
     function filterTiming() {
@@ -100,46 +100,67 @@ function RestaurantListContainer() {
         setPayload({ ...payload, 'sortBy': sortBasedOn });
     }
 
-    function restaurentFilter() {
+    const restaurentFilter = async () => {
+        console.log("hello");
         const defaultPayload = {
             'limit': limit,
             'page': activePage
         };
-
+    
         const payloadToSend = {
             'params': { ...defaultPayload, ...payload }
         };
-
-        axiosInstanceWithoutToken.get(`${BaseUrl}/getRestaurants`, payloadToSend).then((res) => {
-            console.log(res?.data?.data?.restaurants);
-            setFilteredRestaurants(res?.data?.data?.restaurants);
-
+    
+        try {
+            const res = await new Promise((resolve, reject) => {
+                axiosInstanceWithoutToken.get(`${BaseUrl}/getRestaurants`, payloadToSend)
+                    .then(response => resolve(response))
+                    .catch(error => reject(error));
+            });
+    
+            console.log(res?.data?.data.resturant);
+            setFilteredRestaurants(...res?.data?.data?.restaurant);
+            console.log(filteredRestaurants);
+    
             const totalPagesArray = [];
             const totalPages = res?.data?.data?.total / limit;
             for (var i = 0; i < totalPages; i++) {
                 totalPagesArray.push(i);
             }
             setTotalPages(totalPagesArray);
-        });
+    
+            console.log("hello");
+        } catch (error) {
+            console.error("Error occurred: ", error.message);
+        }
     }
+    
+    console.log("hello")
 
     function updateActivePage(activePage) {
         setActivePage(activePage);
     }
 
     function getLocationPayload(location) {
+        console.log("reached_145")
         setRestLocation([...location]);
+        console.log(restLocation)
         if (location.length > 0) {
             setPayload({ ...payload, 'location_code': [location[0].code] });
+            console.log(payload)
         }
     }
 
     function getCuisinePayload(name) {
 
-        if (filteredCuisine.find((item) => { return item === name; })) {
+        if (filteredCuisine.find((item) => { 
+            return item === name; 
+        })) 
+        {
             const index = filteredCuisine.findIndex((item) => { return item === name; });
             filteredCuisine.splice(index, 1);
-        } else {
+        } 
+        else {
             filteredCuisine.push(name);
             setFilteredCuisine([...filteredCuisine]);
         }
@@ -237,13 +258,13 @@ function RestaurantListContainer() {
                     </Col>
 
                     <Col className='rightCol'>
-                        {
+                        {/* {
                             filteredRestaurants.length === 0 && (<div className="noResultFound">
                                 <div>
                                     <h3>Sorry. No result Found</h3> 
                                 </div>    
                             </div>)
-                        }
+                        } */}
                         {filteredRestaurants.length > 0 && filteredRestaurants.map((item, index) =>
                             <RestaurantListCards
                                 key={index}

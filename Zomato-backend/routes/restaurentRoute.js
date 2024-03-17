@@ -76,13 +76,14 @@ Restaurent.insertMany(restaurentdata).then(() => {
 
 router.get('/getRestaurants', async (req, res) => {
      
-   
+   console.log(req)
     location_code = [...location_code,req.query?.location_code];
    const timing_code = req.query?.timing_codes;
    const selectedCuisine = req.query?.selectedCuisine;
    const sortBy = req.query?.sortBy;
    const result = await Restaurent.find();
-  // console.log(result)
+   console.log(result)
+   console.log("line_85_executeed")
    //result=result.toArray();
    //console.log(result);
 
@@ -105,36 +106,37 @@ router.get('/getRestaurants', async (req, res) => {
 
    
 
-   let filtered_restuarants = [];
+  // let filtered_restuarants = [];
 
    // These are filter applied
-   filtered_restuarants = result.filter(resturant => {
-       return Object.keys(filters).every(filter => {
-           //  return resturant[filter].includes(filters[filter])
-           return resturant[filter].some((item, index) => satisfyCallBack(item, index, filters[filter]))
-       });
-   });
+   //console.log()
+//    filtered_restuarants = result.filter(resturant => {
+//        return Object.keys(filters).every(filter => {
+//              return resturant[filter].includes(filters[filter])
+//            //return resturant[filter].some((item, index) => satisfyCallBack(item, index, filters[filter]))
+//        });
+//    });
+//    console.log(filtered_restuarants,"line-118")
+//    //sorted Restaurants 
+//    if(sortBy === 'lowtohigh'){
+//        filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
+//            return item.cost - nextItem.cost;
+//        })
+//    }else if(sortBy === 'hightolow'){
+//        filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
+//            return nextItem.cost - item.cost;
+//        })
+//    }
 
-   //sorted Restaurants 
-   if(sortBy === 'lowtohigh'){
-       filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
-           return item.cost - nextItem.cost;
-       })
-   }else if(sortBy === 'hightolow'){
-       filtered_restuarants = filtered_restuarants.sort((item,nextItem) => {
-           return nextItem.cost - item.cost;
-       })
-   }
-
-   // cost filters
-   if (costFilter) {
-       console.log(costFilter)
-       costFilter = JSON.parse(costFilter)
-       filtered_restuarants = filtered_restuarants.filter((item) => {
-           // console.log(costFilter.from)
-           return (item.cost >= costFilter.from && item.cost <= costFilter.to)
-       });
-   }
+//    // cost filters
+//    if (costFilter) {
+//        console.log(costFilter)
+//        costFilter = JSON.parse(costFilter)
+//        filtered_restuarants = filtered_restuarants.filter((item) => {
+//            // console.log(costFilter.from)
+//            return (item.cost >= costFilter.from && item.cost <= costFilter.to)
+//        });
+//    }
 
    // const skip = (page-1)*limit;
    // const tempFr = [...filtered_restuarants];
@@ -145,18 +147,21 @@ router.get('/getRestaurants', async (req, res) => {
    // on top of applying filters i also need specific page data
 
    try {
+        //console.log(filtered_restuarants);
        res.send({
            'status': 200,
            'data': {
-               'resturant':filtered_restuarants,
-               'total':filtered_restuarants.length
+            //    'resturant':filtered_restuarants,
+            //    'total':filtered_restuarants.length
+               'resturant':result,
+               'total':result.length
            },
        })
    } catch (e) {
        console.error(e)
        res.send({
            'status': 200,
-           'data': filtered_restuarants
+           'data': result
        })
    }
 });

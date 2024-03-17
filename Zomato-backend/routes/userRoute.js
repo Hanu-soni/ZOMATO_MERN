@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const saltRounds = 10;
 //router.use(bcrypt);
 
 router.post('/signup', async (req, res) => {
@@ -39,51 +40,35 @@ router.post('/signup', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    let result;
-    let user = await User.find({ 'username': req.body.username }).limit(1);
-    console.log(user)
-    user= Object.keys(user).map((key) => [key, user[key]]);
+    try {
+        const user = await User.findOne({ 'username': req.body.username });
 
-    if (user) {
-        bcrypt.compare(req.body.password, user[0].password, function (err, result) {
-            if (result) {
-
-                const tokenSignature = {
-                                    'userDetails':{
-                                        'firstName':user[0].username,
-                                        'lastName':user[0].username,
-                                        'userName':user[0].username,
-                                        'email':user[0].username,
-                                    },
-                                    'authorizationDetails':{
-                                            'routes': ['resturantList', 'addResturant','addFilters'] 
-                                    }
-                }
-                const token = jwt.sign(tokenSignature, 'secret');
-                console.log(token)
-                result = {
-                    'status': 200,
-                    'data': {
-                        'token': token
-                    },
-
-                }
-                res.send({ ...result })
-            } else {
-                result = {
-                    'status': 401,
-                    'data': 'Passwword mismatch'
-                }
-                res.send({ ...result })
-            }
-        });
-
-    } else {
-        result = {
-            'status':401,
-            'data': 'No user found'
+        if (!user) {
+            return res.status(401).json({ 'error': 'No user found' });
         }
-        res.send({ ...result })
+
+        bcrypt.compare(req.body.password, user.password, (err, result) => {
+            if (err || !result) {
+                return res.status(401).json({ 'error': 'Password mismatch' });
+            }
+
+            const tokenSignature = {
+                'userDetails': {
+                    'username': user.username,
+                    // Add other user details as needed
+                },
+                'authorizationDetails': {
+                    'routes': ['resturantList', 'addResturant', 'addFilters'] 
+                }
+            };
+            
+            const token = jwt.sign(tokenSignature, 'secret', { expiresIn: '1h' }); // Token expires in 1 hour
+            
+            res.status(200).json({ 'token': token });
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ 'error': 'Internal server error' });
     }
 });
 
