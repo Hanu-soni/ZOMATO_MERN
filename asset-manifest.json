@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Hanu-soni.github.io/zomatoclonereact/static/css/main.c89effac.css",
-    "main.js": "/Hanu-soni.github.io/zomatoclonereact/static/js/main.d2202b87.js",
-    "static/js/787.c1112931.chunk.js": "/Hanu-soni.github.io/zomatoclonereact/static/js/787.c1112931.chunk.js",
-    "static/media/background.jpg": "/Hanu-soni.github.io/zomatoclonereact/static/media/background.39bedd56b07a3668c3cc.jpg",
-    "index.html": "/Hanu-soni.github.io/zomatoclonereact/index.html",
-    "main.c89effac.css.map": "/Hanu-soni.github.io/zomatoclonereact/static/css/main.c89effac.css.map",
-    "main.d2202b87.js.map": "/Hanu-soni.github.io/zomatoclonereact/static/js/main.d2202b87.js.map",
-    "787.c1112931.chunk.js.map": "/Hanu-soni.github.io/zomatoclonereact/static/js/787.c1112931.chunk.js.map"
+    "main.css": "/Hanu-soni.github.io/ZOMATO_MERN/static/css/main.c89effac.css",
+    "main.js": "/Hanu-soni.github.io/ZOMATO_MERN/static/js/main.63a4f7c7.js",
+    "static/js/787.c1112931.chunk.js": "/Hanu-soni.github.io/ZOMATO_MERN/static/js/787.c1112931.chunk.js",
+    "static/media/background.jpg": "/Hanu-soni.github.io/ZOMATO_MERN/static/media/background.39bedd56b07a3668c3cc.jpg",
+    "index.html": "/Hanu-soni.github.io/ZOMATO_MERN/index.html",
+    "main.c89effac.css.map": "/Hanu-soni.github.io/ZOMATO_MERN/static/css/main.c89effac.css.map",
+    "main.63a4f7c7.js.map": "/Hanu-soni.github.io/ZOMATO_MERN/static/js/main.63a4f7c7.js.map",
+    "787.c1112931.chunk.js.map": "/Hanu-soni.github.io/ZOMATO_MERN/static/js/787.c1112931.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c89effac.css",
-    "static/js/main.d2202b87.js"
+    "static/js/main.63a4f7c7.js"
   ]
 }
