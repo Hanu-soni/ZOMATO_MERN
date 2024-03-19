@@ -10,7 +10,8 @@ import {
 import {config} from "./config";
 
 const instanceData = {
-  baseURL:'https://zomato-mern.onrender.com',
+  baseURL:'https://localhost:8080',
+  // baseURL:'https://zomato-mern.onrender.com',
   timeout:6000,
   ...config
 };

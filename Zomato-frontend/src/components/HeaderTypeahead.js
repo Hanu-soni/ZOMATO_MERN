@@ -13,6 +13,7 @@ function HeaderTypeahead() {
     const [selectedLocation, setSelectedLocation] = useState([]);
  
     useEffect(() => {
+        console.log("going good")
 
         if (selectedRestaurant.length > 0) {
            // console.log(selectedRestaurant)
@@ -28,40 +29,49 @@ function HeaderTypeahead() {
             <LocationTypeahead filterRestaurent={restaurentFilter} />
 
             <Typeahead
+                // filterBy={'id'}
                 className='restaurentsInput'
-                labelKey="name"
+                labelKey='name'
                 id='restaurants'
                 options={filteredRestaurants}
                 placeholder="Choose a Restaurants..."
                 selected={selectedRestaurant}
                 onChange={setSelectedRestaurant}
-                // disabled={selectedLocation.length === 0}
+                 disabled={selectedLocation.length === 0}
             />
         </div>
 
     );
 
     function restaurentFilter(location) {
-        console.log(location)
-        setSelectedLocation([...location]);
-        console.log("location");
-        console.log(selectedLocation);
-
-        if(location.length > 0){
-            const location_code = location[0].code;
-            const payloadToSend = {
-                'params':{
-                    'location_code': [location_code]
-                }
+        setSelectedLocation([...location]); // Update selectedLocation state
+        
+        // Use the callback function provided by setSelectedLocation
+        setSelectedLocation((updatedLocation) => {
+            console.log(updatedLocation); // This will log the updated value of selectedLocation
+    
+            if (updatedLocation.length > 0) {
+                const location_code = updatedLocation[0].code;
+                const payloadToSend = {
+                    params: {
+                        location_code: [location_code]
+                    }
+                };
+    
+                axiosInstanceWithoutToken
+                    .get(`${BaseUrl}/getRestaurants`, payloadToSend)
+                    .then((res) => {
+                        console.log(res);
+                        console.log(res.data.data.resturant);
+                        setFilteredRestaurants(res?.data.data.resturant);
+                    });
             }
-
-            axiosInstanceWithoutToken.get(`${BaseUrl}/getRestaurants`, payloadToSend).then((res) => {
-                console.log(res);
-                console.log(res.data.data.resturant);
-                setFilteredRestaurants(res?.data.data.resturant)
-            })
-        }
+    
+            // Make sure to return the updatedLocation value from the callback
+            return updatedLocation;
+        });
     }
+    
 }
 
 export default HeaderTypeahead;
